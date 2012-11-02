@@ -89,7 +89,10 @@
 			    segments,
 			    rings),
 
-			  sphereMaterial);
+			  sphereMaterial,
+
+			  0 // 0 mass, so it doesn't move
+			 );
 
 			// add the sphere to the scene
 			sphere.position.x = -100;
@@ -123,6 +126,10 @@
 				requestAnimationFrame(render); // 60fps, but pauses if we tab away
 
 				scene.simulate(); // run physics
+
+				// Spin the sphere
+				sphere.rotation.y += 0.01;
+				sphere.__dirtyRotation = true; // we moved the sphere manually, so let the simulation know
 
 				renderer.render(scene, camera);
 			}
