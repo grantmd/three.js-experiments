@@ -54,6 +54,17 @@ var Detector = {
 
 		parent.appendChild( element );
 
+	},
+
+	removeGetWebGLMessage: function ( parameters ) {
+		var id, element;
+
+		parameters = parameters || {};
+
+		id = parameters.id !== undefined ? parameters.id : 'oldie';
+
+		element = document.getElementById(id);
+		if (element) element.parentNode.removeChild(element);
 	}
 
 };

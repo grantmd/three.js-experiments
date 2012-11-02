@@ -24,8 +24,6 @@
 
 		<!-- rendering -->
 		<script>
-			if (!Detector.webgl) return Detector.addGetWebGLMessage();
-
 			'use strict';
 
 			Physijs.scripts.worker = 'physijs_worker.js';
@@ -43,92 +41,129 @@
 
 			// get the DOM element to attach to
 			var container = $('#container');
+			var renderer, camera, scene, controls;
 
-			// create a WebGL renderer, camera
-			// and a scene
-			var renderer = new THREE.WebGLRenderer({
-				antialias: true,
-				preserveDrawingBuffer   : true  // required to support .toDataURL()
-			});
-			renderer.setClearColorHex(0x181818);
-			renderer.setFaceCulling("back");
+			// Can we start?
+			if (!Detector.webgl){
+				Detector.addGetWebGLMessage();
 
-			var camera =
-			  new THREE.PerspectiveCamera(
-			    VIEW_ANGLE,
-			    ASPECT,
-			    NEAR,
-			    FAR);
+				if (Detector.canvas){
+					window.setTimeout(Detector.removeGetWebGLMessage, 5000);
+					window.setTimeout(init, 5500);
+				}
+				return;
+			}
+			else{
+				init();
+			}
 
-			var scene = new Physijs.Scene;
-			scene.setGravity(new THREE.Vector3(0, 0, 0)); // Turn off gravity
+			// Init and start
+			function init(){
+				// create a WebGL renderer, camera
+				// and a scene
+				if (Detector.webgl){
+					renderer = new THREE.WebGLRenderer({
+						antialias: true,
+						preserveDrawingBuffer   : true  // required to support .toDataURL()
+					});
 
-			// add the camera to the scene
-			var controls = new THREE.OrbitControls( camera );
-			scene.add(camera);
+					renderer.setFaceCulling("back");
+				}
+				else if (Detector.canvas){
+					renderer = new THREE.CanvasRenderer();
+				}
 
-			// the camera starts at 0,0,0
-			// so pull it back
-			camera.position.z = 300;
+				renderer.setClearColorHex(0x181818);
 
-			// start the renderer
-			renderer.setSize(WIDTH, HEIGHT);
+				camera =
+				  new THREE.PerspectiveCamera(
+				    VIEW_ANGLE,
+				    ASPECT,
+				    NEAR,
+				    FAR);
 
-			// attach the render-supplied DOM element
-			container.append(renderer.domElement);
+				scene = new Physijs.Scene;
+				scene.setGravity(new THREE.Vector3(0, 0, 0)); // Turn off gravity
 
-			////////////////////////////////////////////////////////////////////////////////////////////
+				// add the camera to the scene
+				controls = new THREE.OrbitControls( camera );
+				scene.add(camera);
 
-			// set up the sphere vars
-			var radius = 50,
-			    segments = 24,
-			    rings = 24;
+				// the camera starts at 0,0,0
+				// so pull it back
+				camera.position.z = 300;
 
-			// create the sphere's material
-			var sphereMaterial =
-			  new THREE.MeshLambertMaterial(
-			    {
-			      color: 0xCC0000
-			    });
+				// start the renderer
+				renderer.setSize(WIDTH, HEIGHT);
 
-			// create a new mesh with
-			// sphere geometry
-			var sphere = new Physijs.SphereMesh(
+				// attach the render-supplied DOM element
+				container.append(renderer.domElement);
 
-			  new THREE.SphereGeometry(
-			    radius,
-			    segments,
-			    rings),
+				// Set everything else up
+				setupObjects();
+				setupLights();
 
-			  sphereMaterial,
-
-			  0 // 0 mass, so it doesn't move
-			 );
-
-			// add the sphere to the scene
-			sphere.position.x = -100;
-			scene.add(sphere);
-
-			// Add a green cube
-			var cubeGeometry = new THREE.CubeGeometry(50, 50, 50);
-			var cubeMaterial = new THREE.MeshLambertMaterial({color: 0x00ff00});
-			var cube = new Physijs.BoxMesh(cubeGeometry, cubeMaterial);
-			cube.position.x = 100;
-			scene.add(cube);
+				// Start rendering!
+				render();
+			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////
 
-			// create a point light
-			var pointLight =
-			  new THREE.PointLight(0xFFFFFF);
+			var sphere, cube;
+			function setupObjects(){
+				// set up the sphere vars
+				var radius = 50,
+				    segments = 24,
+				    rings = 24;
 
-			// set its position
-			pointLight.position.x = 10;
-			pointLight.position.y = 50;
-			pointLight.position.z = 130;
+				// create the sphere's material
+				var sphereMaterial =
+				  new THREE.MeshLambertMaterial(
+				    {
+				      color: 0xCC0000
+				    });
 
-			// add to the scene
-			scene.add(pointLight);
+				// create a new mesh with
+				// sphere geometry
+				sphere = new Physijs.SphereMesh(
+
+				  new THREE.SphereGeometry(
+				    radius,
+				    segments,
+				    rings),
+
+				  sphereMaterial,
+
+				  0 // 0 mass, so it doesn't move
+				 );
+
+				// add the sphere to the scene
+				sphere.position.x = -100;
+				scene.add(sphere);
+
+				// Add a green cube
+				var cubeGeometry = new THREE.CubeGeometry(50, 50, 50);
+				var cubeMaterial = new THREE.MeshLambertMaterial({color: 0x00ff00});
+				cube = new Physijs.BoxMesh(cubeGeometry, cubeMaterial);
+				cube.position.x = 100;
+				scene.add(cube);
+			}
+
+			////////////////////////////////////////////////////////////////////////////////////////////
+
+			function setupLights(){
+				// create a point light
+				var pointLight =
+				  new THREE.PointLight(0xFFFFFF);
+
+				// set its position
+				pointLight.position.x = 10;
+				pointLight.position.y = 50;
+				pointLight.position.z = 130;
+
+				// add to the scene
+				scene.add(pointLight);
+			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////
 			
@@ -146,8 +181,6 @@
 
 				renderer.render(scene, camera);
 			}
-
-			render();
 
 			////////////////////////////////////////////////////////////////////////////////////////////
 		</script>
