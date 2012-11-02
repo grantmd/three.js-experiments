@@ -61,10 +61,10 @@
 			    FAR);
 
 			var scene = new Physijs.Scene;
+			scene.setGravity(new THREE.Vector3(0, 0, 0)); // Turn off gravity
 
 			// add the camera to the scene
 			var controls = new THREE.OrbitControls( camera );
-
 			scene.add(camera);
 
 			// the camera starts at 0,0,0
