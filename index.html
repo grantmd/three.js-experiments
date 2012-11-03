@@ -78,6 +78,7 @@
 				}
 
 				renderer.setClearColorHex(0x181818);
+				window.addEventListener( 'resize', onWindowResize, false ); // handle resizing
 
 				camera =
 				  new THREE.PerspectiveCamera(
@@ -109,6 +110,17 @@
 
 				// Start rendering!
 				render();
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				render();
+
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////
