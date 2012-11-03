@@ -19,6 +19,7 @@
 		<script src="jquery-1.8.2.min.js"></script>
 		<script src="three.min.js"></script>
 		<script src="Detector.js"></script>
+		<script src="stats.min.js"></script>
 		<script src="OrbitControls.js"></script>
 		<script src="physi.js"></script>
 
@@ -41,7 +42,7 @@
 
 			// get the DOM element to attach to
 			var container = $('#container');
-			var renderer, camera, scene, controls;
+			var renderer, camera, scene, controls, stats;
 
 			////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -80,6 +81,8 @@
 				renderer.setClearColorHex(0x181818);
 				window.addEventListener( 'resize', onWindowResize, false ); // handle resizing
 
+				// Camera
+
 				camera =
 				  new THREE.PerspectiveCamera(
 				    VIEW_ANGLE,
@@ -102,6 +105,17 @@
 
 				// attach the render-supplied DOM element
 				container.append(renderer.domElement);
+
+				// STATS
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0px';
+				stats.domElement.style.zIndex = 100;
+				container.append( stats.domElement );
+
+				stats.domElement.children[ 0 ].children[ 0 ].style.color = "#aaa";
+				stats.domElement.children[ 0 ].style.background = "transparent";
+				stats.domElement.children[ 0 ].children[ 1 ].style.display = "none";
 
 				// Set everything else up
 				setupControls();
@@ -212,6 +226,8 @@
 			// draw!
 			function render(){
 				requestAnimationFrame(render); // 60fps, but pauses if we tab away
+
+				stats.update(); // update stats
 
 				scene.simulate(); // run physics
 
