@@ -127,6 +127,7 @@
 					switch (event.keyCode){
 
 						case 80: /*P*/
+							// http://learningthreejs.com/blog/2011/09/03/screenshot-in-javascript/
 							var dataUrl = renderer.domElement.toDataURL("image/png");
 							window.open(dataUrl, '_screenshot');
 							break;
