@@ -80,6 +80,12 @@
 
 				renderer.setClearColorHex(0x181818);
 				window.addEventListener( 'resize', onWindowResize, false ); // handle resizing
+				
+				// stop the user getting a text cursor
+				// http://www.aerotwist.com/tutorials/ten-things-i-learned/
+				document.onselectstart = function() {
+					return false;
+				};
 
 				// Camera
 
