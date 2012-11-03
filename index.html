@@ -43,6 +43,8 @@
 			var container = $('#container');
 			var renderer, camera, scene, controls;
 
+			////////////////////////////////////////////////////////////////////////////////////////////
+
 			// Can we start?
 			if (!Detector.webgl){
 				Detector.addGetWebGLMessage();
@@ -56,6 +58,8 @@
 			else{
 				init();
 			}
+
+			////////////////////////////////////////////////////////////////////////////////////////////
 
 			// Init and start
 			function init(){
@@ -86,7 +90,6 @@
 				scene.setGravity(new THREE.Vector3(0, 0, 0)); // Turn off gravity
 
 				// add the camera to the scene
-				controls = new THREE.OrbitControls( camera );
 				scene.add(camera);
 
 				// the camera starts at 0,0,0
@@ -100,11 +103,37 @@
 				container.append(renderer.domElement);
 
 				// Set everything else up
+				setupControls();
 				setupObjects();
 				setupLights();
 
 				// Start rendering!
 				render();
+			}
+
+			////////////////////////////////////////////////////////////////////////////////////////////
+
+			function setupControls(){
+				controls = new THREE.OrbitControls( camera ); // Camera controls
+
+				// Other keyboard controls
+				document.addEventListener('keydown', function(event){
+					if (event.altKey){
+						return;
+					}
+
+					//event.preventDefault();
+
+					switch (event.keyCode){
+
+						case 80: /*P*/
+							var dataUrl = renderer.domElement.toDataURL("image/png");
+							window.open(dataUrl, '_screenshot');
+							break;
+
+					}
+				},
+				false );
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////
