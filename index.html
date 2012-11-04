@@ -146,7 +146,9 @@
 			////////////////////////////////////////////////////////////////////////////////////////////
 
 			function setupControls(){
-				controls = new THREE.OrbitControls( camera ); // Camera controls
+				// Camera controls
+				controls = new THREE.OrbitControls( camera );
+				controls.userZoomSpeed = 0.3;
 
 				// Other keyboard controls
 				document.addEventListener('keydown', function(event){
