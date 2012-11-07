@@ -73,6 +73,10 @@
 					});
 
 					renderer.setFaceCulling("back");
+
+					// shadowing
+					renderer.shadowMapEnabled = true;
+					renderer.shadowMapSoft = true; // to antialias the shadow
 				}
 				else if (Detector.canvas){
 					renderer = new THREE.CanvasRenderer();
@@ -201,6 +205,10 @@
 				  0 // 0 mass, so it doesn't move
 				 );
 
+				// shadows
+				//sphere.castShadow = true;
+				//sphere.receiveShadow  = true;
+
 				// add the sphere to the scene
 				sphere.position.x = -100;
 				scene.add(sphere);
@@ -210,6 +218,8 @@
 				var cubeMaterial = new THREE.MeshLambertMaterial({color: 0x00ff00});
 				cube = new Physijs.BoxMesh(cubeGeometry, cubeMaterial);
 				cube.position.x = 100;
+				//cube.castShadow = true;
+				//cube.receiveShadow  = true;
 				scene.add(cube);
 			}
 
@@ -218,12 +228,17 @@
 			function setupLights(){
 				// create a point light
 				var pointLight =
-				  new THREE.PointLight(0xFFFFFF);
+				  new THREE.SpotLight(0xFFFFFF);
 
 				// set its position
 				pointLight.position.x = 10;
 				pointLight.position.y = 50;
 				pointLight.position.z = 130;
+
+				// shadows
+				// http://learningthreejs.com/blog/2012/01/20/casting-shadows/
+				pointLight.castShadow = true;
+				pointLight.shadowDarkness = 0.5;
 
 				// add to the scene
 				scene.add(pointLight);

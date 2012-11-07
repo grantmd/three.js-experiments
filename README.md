@@ -12,3 +12,4 @@ Besides three.js, I use the following projects:
 And these sites have been helpful:
 
 * http://www.aerotwist.com/tutorials/
+* http://learningthreejs.com/
