@@ -180,7 +180,7 @@
 			var sphere, cube;
 			function setupObjects(){
 				// set up the sphere vars
-				var radius = 50,
+				var radius = 25,
 				    segments = 24,
 				    rings = 24;
 
@@ -210,14 +210,14 @@
 				//sphere.receiveShadow  = true;
 
 				// add the sphere to the scene
-				sphere.position.x = -100;
+				sphere.position.x = -50;
 				scene.add(sphere);
 
 				// Add a green cube
-				var cubeGeometry = new THREE.CubeGeometry(50, 50, 50);
+				var cubeGeometry = new THREE.CubeGeometry(25, 25, 25);
 				var cubeMaterial = new THREE.MeshLambertMaterial({color: 0x00ff00});
 				cube = new Physijs.BoxMesh(cubeGeometry, cubeMaterial);
-				cube.position.x = 100;
+				cube.position.x = 50;
 				//cube.castShadow = true;
 				//cube.receiveShadow  = true;
 				scene.add(cube);
