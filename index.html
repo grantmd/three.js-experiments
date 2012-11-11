@@ -177,7 +177,7 @@
 
 			////////////////////////////////////////////////////////////////////////////////////////////
 
-			var sphere, cube;
+			var sphere, cube, ground;
 			function setupObjects(){
 				// set up the sphere vars
 				var radius = 25,
@@ -221,6 +221,23 @@
 				cube.castShadow = true;
 				cube.receiveShadow  = true;
 				scene.add(cube);
+
+				// Ground
+				var ground_material = Physijs.createMaterial(
+					new THREE.MeshLambertMaterial({color: 0x249E24}),
+					.8, // high friction
+					.4 // low restitution
+				);
+
+				ground = new Physijs.BoxMesh(
+					new THREE.CubeGeometry(1000, 1, 1000),
+					//new THREE.PlaneGeometry(50, 50),
+					ground_material,
+					0 // mass
+				);
+				ground.position.y = -50;
+				ground.receiveShadow = true;
+				scene.add( ground );
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////
