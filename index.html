@@ -101,7 +101,7 @@
 				    FAR);
 
 				scene = new Physijs.Scene;
-				scene.setGravity(new THREE.Vector3(0, 0, 0)); // Turn off gravity
+				scene.setGravity(new THREE.Vector3(0, -30, 0));
 
 				// add the camera to the scene
 				scene.add(camera);
@@ -213,10 +213,10 @@
 				sphere.position.x = -50;
 				scene.add(sphere);
 
-				// Add a green cube
+				// Add a cube
 				var cubeGeometry = new THREE.CubeGeometry(25, 25, 25);
-				var cubeMaterial = new THREE.MeshLambertMaterial({color: 0x00ff00});
-				cube = new Physijs.BoxMesh(cubeGeometry, cubeMaterial);
+				var cubeMaterial = new THREE.MeshLambertMaterial({color: 0x0000ff});
+				cube = new Physijs.BoxMesh(cubeGeometry, cubeMaterial, undefined, { restitution: .2 });
 				cube.position.x = 50;
 				cube.castShadow = true;
 				cube.receiveShadow  = true;
@@ -244,21 +244,31 @@
 
 			function setupLights(){
 				// create a point light
-				var pointLight =
-				  new THREE.SpotLight(0xFFFFFF);
+				var light =
+				  new THREE.DirectionalLight(0xFFFFFF);
 
 				// set its position
-				pointLight.position.x = 10;
-				pointLight.position.y = 50;
-				pointLight.position.z = 130;
+				light.position.x = 20;
+				light.position.y = 40;
+				light.position.z = 15;
 
 				// shadows
 				// http://learningthreejs.com/blog/2012/01/20/casting-shadows/
-				pointLight.castShadow = true;
-				pointLight.shadowDarkness = 0.5;
+				light.castShadow = true;
+				light.shadowCameraLeft = -60;
+				light.shadowCameraTop = -60;
+				light.shadowCameraRight = 60;
+				light.shadowCameraBottom = 60;
+				light.shadowCameraNear = 20;
+				light.shadowCameraFar = 200;
+				light.shadowBias = -.0001
+				light.shadowMapWidth = light.shadowMapHeight = 2048;
+				light.shadowDarkness = .7;
+
+				light.target.position.copy( scene.position );
 
 				// add to the scene
-				scene.add(pointLight);
+				scene.add(light);
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////
