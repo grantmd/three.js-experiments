@@ -173,6 +173,21 @@
 					}
 				},
 				false );
+
+				// Other mouse controls
+				document.addEventListener( 'mousedown', function(event){
+					// Spawn a cube where we click
+					if (event.button === 0){
+						var spawnedCube = new Physijs.BoxMesh(new THREE.CubeGeometry(25, 25, 25), new THREE.MeshLambertMaterial({color: 0x0000ff}), undefined, { restitution: .2 });
+						spawnedCube.position.x = event.pageX - (window.innerWidth / 2);
+						//spawnedCube.position.y = event.pageY - (window.innerHeight / 2);
+						spawnedCube.position.y = 100;
+						spawnedCube.castShadow = true;
+						spawnedCube.receiveShadow  = true;
+						scene.add(spawnedCube);
+					}
+				},
+				false );
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////
