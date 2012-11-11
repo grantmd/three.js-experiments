@@ -181,8 +181,8 @@
 			function setupObjects(){
 				// set up the sphere vars
 				var radius = 25,
-				    segments = 24,
-				    rings = 24;
+				    segments = 32,
+				    rings = 32;
 
 				// create the sphere's material
 				var sphereMaterial =
@@ -203,11 +203,11 @@
 				  sphereMaterial,
 
 				  0 // 0 mass, so it doesn't move
-				 );
+				);
 
 				// shadows
-				//sphere.castShadow = true;
-				//sphere.receiveShadow  = true;
+				sphere.castShadow = true;
+				sphere.receiveShadow  = true;
 
 				// add the sphere to the scene
 				sphere.position.x = -50;
@@ -218,8 +218,8 @@
 				var cubeMaterial = new THREE.MeshLambertMaterial({color: 0x00ff00});
 				cube = new Physijs.BoxMesh(cubeGeometry, cubeMaterial);
 				cube.position.x = 50;
-				//cube.castShadow = true;
-				//cube.receiveShadow  = true;
+				cube.castShadow = true;
+				cube.receiveShadow  = true;
 				scene.add(cube);
 			}
 
