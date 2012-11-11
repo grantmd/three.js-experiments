@@ -106,13 +106,13 @@
 				projector = new THREE.Projector();
 
 				scene = new Physijs.Scene;
-				scene.setGravity(new THREE.Vector3(0, -30, 0));
+				scene.setGravity(new THREE.Vector3(0, -5, 0));
 
 				// add the camera to the scene
 				scene.add(camera);
 
 				// the camera starts at 0,0,0, so pull it back
-				camera.position.z = 300;
+				camera.position.z = 15;
 
 				// start the renderer
 				renderer.setSize(WIDTH, HEIGHT);
@@ -156,7 +156,7 @@
 			function setupControls(){
 				// Camera controls
 				controls = new THREE.OrbitControls( camera );
-				controls.userZoomSpeed = 0.3;
+				controls.userZoomSpeed = 1.0;
 				controls.maxPolarAngle = Math.PI/2; // don't let us below the ground plane
 
 				// Other keyboard controls
@@ -215,10 +215,10 @@
 							if (intersector.object == plane){
 
 								console.log("Cube spawned", intersector.point.x, intersector.point.y, intersector.point.z);
-								var spawnedCube = new Physijs.BoxMesh(new THREE.CubeGeometry(25, 25, 25), new THREE.MeshLambertMaterial({color: 0x0000ff}), undefined, { restitution: .2 });
+								var spawnedCube = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), new THREE.MeshLambertMaterial({color: 0x0000ff}), undefined, { restitution: .2 });
 								spawnedCube.position.x = intersector.point.x;
 								spawnedCube.position.y = intersector.point.y;
-								spawnedCube.position.y = 100;
+								spawnedCube.position.z = 0;
 								spawnedCube.castShadow = true;
 								spawnedCube.receiveShadow  = true;
 								scene.add(spawnedCube);
@@ -247,7 +247,7 @@
 			var sphere, cube, ground;
 			function setupObjects(){
 				// set up the sphere vars
-				var radius = 25,
+				var radius = 1,
 				    segments = 32,
 				    rings = 32;
 
@@ -277,14 +277,14 @@
 				sphere.receiveShadow  = true;
 
 				// add the sphere to the scene
-				sphere.position.x = -50;
+				sphere.position.x = -2;
 				scene.add(sphere);
 
 				// Add a cube
-				var cubeGeometry = new THREE.CubeGeometry(25, 25, 25);
+				var cubeGeometry = new THREE.CubeGeometry(1, 1, 1);
 				var cubeMaterial = new THREE.MeshLambertMaterial({color: 0x0000ff});
 				cube = new Physijs.BoxMesh(cubeGeometry, cubeMaterial, undefined, { restitution: .2 });
-				cube.position.x = 50;
+				cube.position.x = 2;
 				cube.castShadow = true;
 				cube.receiveShadow  = true;
 				scene.add(cube);
@@ -302,7 +302,7 @@
 					ground_material,
 					0 // mass
 				);
-				ground.position.y = -50;
+				ground.position.y = -2;
 				ground.receiveShadow = true;
 				scene.add( ground );
 
