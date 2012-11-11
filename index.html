@@ -306,7 +306,7 @@
 				ground.receiveShadow = true;
 				scene.add( ground );
 
-				plane = new THREE.Mesh( new THREE.PlaneGeometry( 1000, 1000, 1, 1 ), new THREE.MeshBasicMaterial( { visible: false } ) );
+				plane = new THREE.Mesh( new THREE.CubeGeometry( 1000, 1000, 1, 1, 1, 1 ), new THREE.MeshBasicMaterial( { visible: false } ) );
 				scene.add( plane );
 			}
 
