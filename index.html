@@ -42,7 +42,9 @@
 
 			// get the DOM element to attach to
 			var container = $('#container');
-			var renderer, camera, scene, controls, stats;
+			var renderer, camera, scene, controls, stats, projector, ray, plane, isShiftDown = false;
+
+			var mouse = new THREE.Vector3( 0, 0, 0.5 ); // Mouse position
 
 			////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -87,18 +89,11 @@
 				
 				// stop the user getting a text cursor
 				// http://www.aerotwist.com/tutorials/ten-things-i-learned/
-				document.onselectstart = function() {
-					return false;
-				};
+				document.onselectstart = function(){ return false; };
 
 				// Camera
-
-				camera =
-				  new THREE.PerspectiveCamera(
-				    VIEW_ANGLE,
-				    ASPECT,
-				    NEAR,
-				    FAR);
+				camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+				projector = new THREE.Projector();
 
 				scene = new Physijs.Scene;
 				scene.setGravity(new THREE.Vector3(0, -30, 0));
@@ -106,8 +101,7 @@
 				// add the camera to the scene
 				scene.add(camera);
 
-				// the camera starts at 0,0,0
-				// so pull it back
+				// the camera starts at 0,0,0, so pull it back
 				camera.position.z = 300;
 
 				// start the renderer
@@ -164,30 +158,77 @@
 
 					switch (event.keyCode){
 
-						case 80: /*P*/
+						case 80: /* P */
 							// http://learningthreejs.com/blog/2011/09/03/screenshot-in-javascript/
 							var dataUrl = renderer.domElement.toDataURL("image/png");
 							window.open(dataUrl, '_screenshot');
 							break;
-
+						case 16: /* shift */
+							isShiftDown = true;
+							break;
 					}
 				},
-				false );
+				false);
+
+				document.addEventListener('keyup', function(event){
+					if (event.altKey){
+						return;
+					}
+
+					//event.preventDefault();
+
+					switch (event.keyCode){
+
+						case 16: /* shift */
+							isShiftDown = false;
+							break;
+					}
+				},
+				false);
 
 				// Other mouse controls
-				document.addEventListener( 'mousedown', function(event){
+				document.addEventListener('mousedown', function(event){
+
+					event.preventDefault();
+
 					// Spawn a cube where we click
-					if (event.button === 0){
-						var spawnedCube = new Physijs.BoxMesh(new THREE.CubeGeometry(25, 25, 25), new THREE.MeshLambertMaterial({color: 0x0000ff}), undefined, { restitution: .2 });
-						spawnedCube.position.x = event.pageX - (window.innerWidth / 2);
-						//spawnedCube.position.y = event.pageY - (window.innerHeight / 2);
-						spawnedCube.position.y = 100;
-						spawnedCube.castShadow = true;
-						spawnedCube.receiveShadow  = true;
-						scene.add(spawnedCube);
+					if (event.button === 0 && isShiftDown){
+						ray = projector.pickingRay(mouse.clone(), camera);
+
+						var intersects = ray.intersectObjects(scene.children);
+						console.log('intersects', intersects);
+						for (var i = 0; i < intersects.length; i++){
+
+							var intersector = intersects[i];
+
+							if (intersector.object == plane){
+
+								console.log("Cube spawned", intersector.point.x, intersector.point.y, intersector.point.z);
+								var spawnedCube = new Physijs.BoxMesh(new THREE.CubeGeometry(25, 25, 25), new THREE.MeshLambertMaterial({color: 0x0000ff}), undefined, { restitution: .2 });
+								spawnedCube.position.x = intersector.point.x;
+								spawnedCube.position.y = intersector.point.y;
+								spawnedCube.position.y = 100;
+								spawnedCube.castShadow = true;
+								spawnedCube.receiveShadow  = true;
+								scene.add(spawnedCube);
+							}
+
+						}
 					}
 				},
-				false );
+				false);
+
+				document.addEventListener('mousemove', function(event){
+
+					event.preventDefault();
+
+					mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+					mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+					mouse.z = 0;
+
+					//console.log('Mouse move', mouse.x, mouse.y, mouse.z);
+				},
+				false);
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////
@@ -253,14 +294,16 @@
 				ground.position.y = -50;
 				ground.receiveShadow = true;
 				scene.add( ground );
+
+				plane = new THREE.Mesh( new THREE.PlaneGeometry( 1000, 1000, 1, 1 ), new THREE.Material( { visible: false } ) );
+				scene.add( plane );
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////
 
 			function setupLights(){
-				// create a point light
-				var light =
-				  new THREE.DirectionalLight(0xFFFFFF);
+				// create a directional light
+				var light = new THREE.DirectionalLight(0xFFFFFF);
 
 				// set its position
 				light.position.x = 20;
@@ -284,6 +327,9 @@
 
 				// add to the scene
 				scene.add(light);
+
+				//var ambientLight = new THREE.AmbientLight( 0x606060 );
+				//scene.add( ambientLight );
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////
