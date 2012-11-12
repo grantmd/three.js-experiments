@@ -5,7 +5,7 @@
  * @author WestLangley / https://github.com/WestLangley
  */
 
-THREE.OrbitControls = function ( object, domElement ) {
+Controls = function ( object, domElement ) {
 
 	THREE.EventTarget.call( this );
 
@@ -54,6 +54,10 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	var STATE = { NONE : -1, ROTATE : 0, ZOOM : 1 };
 	var state = STATE.NONE;
+
+	var mouse = new THREE.Vector3( 0, 0, 0.5 ); // Mouse position
+	var ray, isShiftDown = false;
+	var projector = new THREE.Projector();
 
 	// events
 
@@ -208,9 +212,25 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		if ( event.button === 0 || event.button === 2 ) {
 
-			state = STATE.ROTATE;
+			if (isShiftDown){
+				ray = projector.pickingRay(mouse.clone(), object);
 
-			rotateStart.set( event.clientX, event.clientY );
+				var intersects = ray.intersectObjects(object.parent.children);
+				console.log('intersects', intersects);
+				for (var i = 0; i < intersects.length; i++){
+
+					var intersector = intersects[i];
+
+					console.log("Cube spawned", intersector.point.x, intersector.point.y, intersector.point.z);
+					new Voxel( scene, intersector.point, 0x0000ff );
+
+				}
+			}
+			else{
+				state = STATE.ROTATE;
+
+				rotateStart.set( event.clientX, event.clientY );
+			}
 
 		} else if ( event.button === 1 ) {
 
@@ -228,6 +248,10 @@ THREE.OrbitControls = function ( object, domElement ) {
 	function onMouseMove( event ) {
 
 		event.preventDefault();
+
+		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+		mouse.z = 0;
 
 		if ( state === STATE.ROTATE ) {
 
@@ -287,8 +311,47 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	}
 
+	function onKeyDown( event ) {
+
+		if (event.altKey){
+			return;
+		}
+
+		event.preventDefault();
+
+		switch (event.keyCode){
+
+			case 80: /* P */
+				// http://learningthreejs.com/blog/2011/09/03/screenshot-in-javascript/
+				var dataUrl = renderer.domElement.toDataURL("image/png");
+				window.open(dataUrl, '_screenshot');
+				break;
+			case 16: /* shift */
+				isShiftDown = true;
+				break;
+		}
+	}
+
+	function onKeyUp( event ) {
+		if (event.altKey){
+			return;
+		}
+
+		event.preventDefault();
+
+		switch (event.keyCode){
+
+			case 16: /* shift */
+				isShiftDown = false;
+				break;
+		}
+	}
+
 	this.domElement.addEventListener( 'contextmenu', function ( event ) { event.preventDefault(); }, false );
 	this.domElement.addEventListener( 'mousedown', onMouseDown, false );
 	this.domElement.addEventListener( 'mousewheel', onMouseWheel, false );
+
+	this.domElement.addEventListener( 'keydown', onKeyDown, false );
+	this.domElement.addEventListener( 'keyup', onKeyUp, false );
 
 };

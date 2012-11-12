@@ -12,9 +12,7 @@ var VIEW_ANGLE = 45,
 
 // get the DOM element to attach to
 var container = document.getElementById('container');
-var renderer, camera, scene, controls, stats, projector, ray, plane, isShiftDown = false;
-
-var mouse = new THREE.Vector3( 0, 0, 0.5 ); // Mouse position
+var renderer, camera, scene, controls, stats;
 
 // Init and start
 function init(){
@@ -45,7 +43,6 @@ function init(){
 
 	// Camera
 	camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-	projector = new THREE.Projector();
 
 	scene = new Physijs.Scene;
 	scene.setGravity(new THREE.Vector3(0, -5, 0));
@@ -97,85 +94,9 @@ function onWindowResize() {
 
 function setupControls(){
 	// Camera controls
-	controls = new THREE.OrbitControls( camera );
+	controls = new Controls( camera );
 	controls.userZoomSpeed = 1.0;
 	controls.maxPolarAngle = Math.PI/2; // don't let us below the ground plane
-
-	// Other keyboard controls
-	document.addEventListener('keydown', function(event){
-		if (event.altKey){
-			return;
-		}
-
-		//event.preventDefault();
-
-		switch (event.keyCode){
-
-			case 80: /* P */
-				// http://learningthreejs.com/blog/2011/09/03/screenshot-in-javascript/
-				var dataUrl = renderer.domElement.toDataURL("image/png");
-				window.open(dataUrl, '_screenshot');
-				break;
-			case 16: /* shift */
-				isShiftDown = true;
-				break;
-		}
-	},
-	false);
-
-	document.addEventListener('keyup', function(event){
-		if (event.altKey){
-			return;
-		}
-
-		//event.preventDefault();
-
-		switch (event.keyCode){
-
-			case 16: /* shift */
-				isShiftDown = false;
-				break;
-		}
-	},
-	false);
-
-	// Other mouse controls
-	document.addEventListener('mousedown', function(event){
-
-		event.preventDefault();
-
-		// Spawn a cube where we click
-		if (event.button === 0 && isShiftDown){
-			ray = projector.pickingRay(mouse.clone(), camera);
-
-			var intersects = ray.intersectObjects(scene.children);
-			console.log('intersects', intersects);
-			for (var i = 0; i < intersects.length; i++){
-
-				var intersector = intersects[i];
-
-				if (intersector.object == plane){
-
-					console.log("Cube spawned", intersector.point.x, intersector.point.y, intersector.point.z);
-					new Voxel( scene, intersector.point, 0x0000ff );
-				}
-
-			}
-		}
-	},
-	false);
-
-	document.addEventListener('mousemove', function(event){
-
-		event.preventDefault();
-
-		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-		mouse.z = 0;
-
-		//console.log('Mouse move', mouse.x, mouse.y, mouse.z);
-	},
-	false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,8 +106,8 @@ function setupObjects(){
 	// Ground
 	var ground_material = Physijs.createMaterial(
 		new THREE.MeshLambertMaterial({color: 0x249E24}),
-		.8, // high friction
-		.4 // low restitution
+		0.8, // high friction
+		0.4 // low restitution
 	);
 
 	ground = new Physijs.BoxMesh(
@@ -198,9 +119,6 @@ function setupObjects(){
 	ground.position.y = -2;
 	//ground.receiveShadow = true;
 	scene.add( ground );
-
-	plane = new THREE.Mesh( new THREE.CubeGeometry( 1000, 1000, 1, 1, 1, 1 ), new THREE.MeshBasicMaterial( { visible: false } ) );
-	scene.add( plane );
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
