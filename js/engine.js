@@ -45,13 +45,14 @@ function init(){
 	camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 
 	scene = new Physijs.Scene;
-	scene.setGravity(new THREE.Vector3(0, -5, 0));
+	scene.setGravity(new THREE.Vector3(0, -30, 0));
 
 	// add the camera to the scene
 	scene.add(camera);
 
 	// the camera starts at 0,0,0, so pull it back
-	camera.position.z = 15;
+	camera.position.y = 400;
+	camera.position.z = 400;
 
 	// start the renderer
 	renderer.setSize(WIDTH, HEIGHT);
@@ -116,7 +117,7 @@ function setupObjects(){
 		ground_material,
 		0 // mass
 	);
-	ground.position.y = -2;
+	ground.position.y = -0.5; // so that the top is at exactly 0
 	//ground.receiveShadow = true;
 	scene.add( ground );
 }

@@ -55,9 +55,13 @@ Controls = function ( object, domElement ) {
 	var STATE = { NONE : -1, ROTATE : 0, ZOOM : 1 };
 	var state = STATE.NONE;
 
-	var mouse = new THREE.Vector3( 0, 0, 0.5 ); // Mouse position
+	var mouse = new THREE.Vector3( 0, 0, 0 ); // Mouse position
 	var ray, isShiftDown = false;
 	var projector = new THREE.Projector();
+
+	var cursor = new THREE.Mesh(new THREE.CubeGeometry(50, 50, 50), new THREE.MeshLambertMaterial({color: 0x880000, opacity: 0.4, transparent: true}));
+	cursor.position.y = 25;
+	scene.add(cursor);
 
 	// events
 
@@ -217,12 +221,10 @@ Controls = function ( object, domElement ) {
 
 				var intersects = ray.intersectObjects(object.parent.children);
 				console.log('intersects', intersects);
-				for (var i = 0; i < intersects.length; i++){
+				if (intersects.length){
 
-					var intersector = intersects[i];
-
-					console.log("Cube spawned", intersector.point.x, intersector.point.y, intersector.point.z);
-					new Voxel( scene, intersector.point, 0x0000ff );
+					var position = intersects[0].object == cursor ? intersects[1].point : intersects[0].point;
+					new Voxel( scene, position, 0x0000ff );
 
 				}
 			}
@@ -240,7 +242,6 @@ Controls = function ( object, domElement ) {
 
 		}
 
-		document.addEventListener( 'mousemove', onMouseMove, false );
 		document.addEventListener( 'mouseup', onMouseUp, false );
 
 	}
@@ -252,6 +253,21 @@ Controls = function ( object, domElement ) {
 		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 		mouse.z = 0;
+
+		ray = projector.pickingRay(mouse.clone(), object);
+
+		var intersects = ray.intersectObjects(object.parent.children);
+		if (intersects.length){
+
+			var position = intersects[0].object == cursor ? intersects[1].point : intersects[0].point;
+
+			cursor.position.x = Math.floor( position.x / 50 ) * 50 + 25;
+			cursor.position.y = Math.floor( position.y / 50 ) * 50 + 25;
+			cursor.position.z = Math.floor( position.z / 50 ) * 50 + 25;
+
+			if (cursor.position.y < 25) cursor.position.y = 25;
+
+		}
 
 		if ( state === STATE.ROTATE ) {
 
@@ -288,7 +304,6 @@ Controls = function ( object, domElement ) {
 
 		if ( ! scope.userRotate ) return;
 
-		document.removeEventListener( 'mousemove', onMouseMove, false );
 		document.removeEventListener( 'mouseup', onMouseUp, false );
 
 		state = STATE.NONE;
@@ -349,6 +364,7 @@ Controls = function ( object, domElement ) {
 
 	this.domElement.addEventListener( 'contextmenu', function ( event ) { event.preventDefault(); }, false );
 	this.domElement.addEventListener( 'mousedown', onMouseDown, false );
+	this.domElement.addEventListener( 'mousemove', onMouseMove, false );
 	this.domElement.addEventListener( 'mousewheel', onMouseWheel, false );
 
 	this.domElement.addEventListener( 'keydown', onKeyDown, false );
