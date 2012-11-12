@@ -179,13 +179,7 @@ function setupControls(){
 				if (intersector.object == plane){
 
 					console.log("Cube spawned", intersector.point.x, intersector.point.y, intersector.point.z);
-					var spawnedCube = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), new THREE.MeshLambertMaterial({color: 0x0000ff}), undefined, { restitution: .2 });
-					spawnedCube.position.x = intersector.point.x;
-					spawnedCube.position.y = intersector.point.y;
-					spawnedCube.position.z = 0;
-					spawnedCube.castShadow = true;
-					spawnedCube.receiveShadow  = true;
-					scene.add(spawnedCube);
+					new Voxel( scene, intersector.point, 0x0000ff );
 				}
 
 			}
@@ -208,51 +202,8 @@ function setupControls(){
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-var sphere, cube, ground;
+var ground;
 function setupObjects(){
-	// set up the sphere vars
-	var radius = 1,
-	    segments = 32,
-	    rings = 32;
-
-	// create the sphere's material
-	var sphereMaterial =
-	  new THREE.MeshLambertMaterial(
-	    {
-	      color: 0xCC0000
-	    });
-
-	// create a new mesh with
-	// sphere geometry
-	sphere = new Physijs.SphereMesh(
-
-	  new THREE.SphereGeometry(
-	    radius,
-	    segments,
-	    rings),
-
-	  sphereMaterial,
-
-	  0 // 0 mass, so it doesn't move
-	);
-
-	// shadows
-	sphere.castShadow = true;
-	sphere.receiveShadow  = true;
-
-	// add the sphere to the scene
-	sphere.position.x = -2;
-	scene.add(sphere);
-
-	// Add a cube
-	var cubeGeometry = new THREE.CubeGeometry(1, 1, 1);
-	var cubeMaterial = new THREE.MeshLambertMaterial({color: 0x0000ff});
-	cube = new Physijs.BoxMesh(cubeGeometry, cubeMaterial, undefined, { restitution: .2 });
-	cube.position.x = 2;
-	cube.castShadow = true;
-	cube.receiveShadow  = true;
-	scene.add(cube);
-
 	// Ground
 	var ground_material = Physijs.createMaterial(
 		new THREE.MeshLambertMaterial({color: 0x249E24}),
@@ -320,8 +271,8 @@ function render(){
 	controls.update(); // controls
 
 	// Spin the sphere
-	sphere.rotation.y += 0.01;
-	sphere.__dirtyRotation = true; // we moved the sphere manually, so let the simulation know
+	//sphere.rotation.y += 0.01;
+	//sphere.__dirtyRotation = true; // we moved the sphere manually, so let the simulation know
 
 	renderer.render(scene, camera);
 }
