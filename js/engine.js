@@ -29,8 +29,8 @@ function init(){
 		renderer.setFaceCulling("back");
 
 		// shadowing
-		renderer.shadowMapEnabled = true;
-		renderer.shadowMapSoft = true; // to antialias the shadow
+		//renderer.shadowMapEnabled = true;
+		//renderer.shadowMapSoft = true; // to antialias the shadow
 	}
 	else if (Detector.canvas){
 		renderer = new THREE.CanvasRenderer();
@@ -196,7 +196,7 @@ function setupObjects(){
 		0 // mass
 	);
 	ground.position.y = -2;
-	ground.receiveShadow = true;
+	//ground.receiveShadow = true;
 	scene.add( ground );
 
 	plane = new THREE.Mesh( new THREE.CubeGeometry( 1000, 1000, 1, 1, 1, 1 ), new THREE.MeshBasicMaterial( { visible: false } ) );
@@ -221,7 +221,7 @@ function setupLights(){
 
 	// shadows
 	// http://learningthreejs.com/blog/2012/01/20/casting-shadows/
-	light.castShadow = true;
+	/*light.castShadow = true;
 	light.shadowCameraLeft = -60;
 	light.shadowCameraTop = -60;
 	light.shadowCameraRight = 60;
@@ -230,12 +230,40 @@ function setupLights(){
 	light.shadowCameraFar = 200;
 	light.shadowBias = -0.0001;
 	light.shadowMapWidth = light.shadowMapHeight = 2048;
-	light.shadowDarkness = 0.7;
+	light.shadowDarkness = 0.7;*/
 
 	light.target.position.copy( scene.position );
 
 	// add to the scene
 	scene.add(light);
+
+	// create a directional light
+	var light2 = new THREE.DirectionalLight(0x808080);
+
+	// set its position
+	light2.position.x = -100;
+	light2.position.y = 100;
+	light2.position.z = -100;
+
+	//light2.position.normalize();
+
+	// shadows
+	// http://learningthreejs.com/blog/2012/01/20/casting-shadows/
+	/*light2.castShadow = true;
+	light2.shadowCameraLeft = -60;
+	light2.shadowCameraTop = -60;
+	light2.shadowCameraRight = 60;
+	light2.shadowCameraBottom = 60;
+	light2.shadowCameraNear = 20;
+	light2.shadowCameraFar = 200;
+	light2.shadowBias = -0.0001;
+	light2.shadowMapWidth = light2.shadowMapHeight = 2048;
+	light2.shadowDarkness = 0.7;*/
+
+	light2.target.position.copy( scene.position );
+
+	// add to the scene
+	scene.add(light2);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

@@ -6,8 +6,8 @@ Voxel = function ( scene, position, color ) {
 	voxel.position.y = Math.round(position.y);
 	voxel.position.z = Math.round(position.z);
 
-	voxel.castShadow = true;
-	voxel.receiveShadow  = true;
+	//voxel.castShadow = true;
+	//voxel.receiveShadow  = true;
 
 	scene.add(voxel);
 };
