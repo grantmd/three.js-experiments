@@ -228,13 +228,18 @@ function setupObjects(){
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 function setupLights(){
+	var ambientLight = new THREE.AmbientLight( 0x202020 );
+	scene.add( ambientLight );
+
 	// create a directional light
-	var light = new THREE.DirectionalLight(0xFFFFFF);
+	var light = new THREE.DirectionalLight(0xffffff);
 
 	// set its position
-	light.position.x = 20;
-	light.position.y = 40;
-	light.position.z = 15;
+	light.position.x = 100;
+	light.position.y = 100;
+	light.position.z = 100;
+
+	//light.position.normalize();
 
 	// shadows
 	// http://learningthreejs.com/blog/2012/01/20/casting-shadows/
@@ -245,17 +250,14 @@ function setupLights(){
 	light.shadowCameraBottom = 60;
 	light.shadowCameraNear = 20;
 	light.shadowCameraFar = 200;
-	light.shadowBias = -.0001
+	light.shadowBias = -0.0001;
 	light.shadowMapWidth = light.shadowMapHeight = 2048;
-	light.shadowDarkness = .7;
+	light.shadowDarkness = 0.7;
 
 	light.target.position.copy( scene.position );
 
 	// add to the scene
 	scene.add(light);
-
-	//var ambientLight = new THREE.AmbientLight( 0x606060 );
-	//scene.add( ambientLight );
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
