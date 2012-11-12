@@ -26,7 +26,6 @@
 		</div>
 
 		<!-- javascript libs at the end -->
-		<script src="/js/jquery-1.8.2.min.js"></script>
 		<script src="/js/three.min.js"></script>
 		<script src="/js/Detector.js"></script>
 		<script src="/js/stats.min.js"></script>
@@ -51,7 +50,7 @@
 			  FAR = 10000;
 
 			// get the DOM element to attach to
-			var container = $('#container');
+			var container = document.getElementById('container');
 			var renderer, camera, scene, controls, stats, projector, ray, plane, isShiftDown = false;
 
 			var mouse = new THREE.Vector3( 0, 0, 0.5 ); // Mouse position
@@ -118,14 +117,14 @@
 				renderer.setSize(WIDTH, HEIGHT);
 
 				// attach the render-supplied DOM element
-				container.append(renderer.domElement);
+				container.appendChild(renderer.domElement);
 
 				// STATS
 				stats = new Stats();
 				stats.domElement.style.position = 'absolute';
 				stats.domElement.style.top = '0px';
 				stats.domElement.style.zIndex = 100;
-				container.append( stats.domElement );
+				container.appendChild( stats.domElement );
 
 				stats.domElement.children[ 0 ].children[ 0 ].style.color = "#aaa";
 				stats.domElement.children[ 0 ].style.background = "transparent";
