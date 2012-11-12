@@ -1,8 +1,4 @@
-
-'use strict';
-
-Physijs.scripts.worker = '/js/physijs_worker.js';
-Physijs.scripts.ammo = '/js/ammo.js';
+////////////////////////////////////////////////////////////////////////////////////////////
 
 // set the scene size
 var WIDTH = window.innerWidth,
@@ -19,24 +15,6 @@ var container = document.getElementById('container');
 var renderer, camera, scene, controls, stats, projector, ray, plane, isShiftDown = false;
 
 var mouse = new THREE.Vector3( 0, 0, 0.5 ); // Mouse position
-
-////////////////////////////////////////////////////////////////////////////////////////////
-
-// Can we start?
-if (!Detector.webgl){
-	Detector.addGetWebGLMessage();
-
-	if (Detector.canvas){
-		window.setTimeout(Detector.removeGetWebGLMessage, 5000);
-		window.setTimeout(init, 5500);
-	}
-	return;
-}
-else{
-	init();
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
 
 // Init and start
 function init(){

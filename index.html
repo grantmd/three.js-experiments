@@ -17,6 +17,29 @@
 				font-family: Monospace;
 			}
 		</style>
+
+		<script type="text/javascript">
+			window.onload = function(){
+				Physijs.scripts.worker = '/js/physijs_worker.js';
+				Physijs.scripts.ammo = '/js/ammo.js';
+
+				////////////////////////////////////////////////////////////////////////////////////////////
+
+				// Can we start?
+				if (!Detector.webgl){
+					Detector.addGetWebGLMessage();
+
+					if (Detector.canvas){
+						window.setTimeout(Detector.removeGetWebGLMessage, 5000);
+						window.setTimeout(init, 5500);
+					}
+					return;
+				}
+				else{
+					init();
+				}
+			}
+		</script>
 	</head>
 	<body>
 
